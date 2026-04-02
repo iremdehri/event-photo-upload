@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotoğraf Yükle ✨</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f8f9fa; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 80%; max-width: 400px; }
+        h2 { color: #333; margin-bottom: 10px; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; }
+        #fileInput { display: none; }
+        .upload-btn { background-color: #FF8A8A; color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; display: inline-block; transition: 0.3s; }
+        .upload-btn:active { transform: scale(0.95); }
+        #status { margin-top: 20px; font-size: 14px; font-weight: bold; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #FF8A8A; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: none; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Anıları Paylaş 📸</h2>
+        <p id="albumName">Albüm yükleniyor...</p>
+        
+        <label for="fileInput" class="upload-btn">Fotoğrafları Seç</label>
+        <input type="file" id="fileInput" multiple accept="image/*">
+        
+        <div class="loader" id="loader"></div>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // 1. URL'den UUID'yi çek (https://siten.com/index.html?uuid=abc-123)
+        const urlParams = new URLSearchParams(window.location.search);
+        const uuid = urlParams.get('uuid');
+        const BACKEND_URL = window.location.hostname === "localhost"
+            ? "http://localhost:8080/api/photos/public/upload/"
+            : "https://SENIN-BACKEND-LINKIN.up.railway.app/api/photos/public/upload/";
+
+        // 2. Dosya seçilince otomatik yükleme başlasın
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            const files = e.target.files;
+            if (files.length === 0) return;
+
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            // Arayüzü güncelle
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('status').innerText = "Yükleniyor...";
+            document.getElementById('status').style.color = "#666";
+
+            try {
+                const response = await fetch(BACKEND_URL + uuid, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    document.getElementById('status').innerText = "Başarıyla Yüklendi! 🎉";
+                    document.getElementById('status').style.color = "green";
+                } else {
+                    throw new Error("Yükleme başarısız.");
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = "Hata oluştu, tekrar dene!";
+                document.getElementById('status').style.color = "red";
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
