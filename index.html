@@ -21,7 +21,7 @@
 
     <div class="card">
         <h2>Anıları Paylaş 📸</h2>
-        <p id="albumName">Albüm yükleniyor...</p>
+        <p id="albumName">Albümü sizinle büyütüyoruz...</p>
         
         <label for="fileInput" class="upload-btn">Fotoğrafları Seç</label>
         <input type="file" id="fileInput" multiple accept="image/*">
@@ -36,7 +36,7 @@
         const uuid = urlParams.get('uuid');
         const BACKEND_URL = window.location.hostname === "localhost"
             ? "http://localhost:8080/api/photos/public/upload/"
-            : "https://event-photo.onrender.com/";
+            : "https://event-photo.onrender.com/api/photos/public/upload/";
 
         // 2. Dosya seçilince otomatik yükleme başlasın
         document.getElementById('fileInput').addEventListener('change', async (e) => {
