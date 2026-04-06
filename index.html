@@ -36,7 +36,7 @@
         const uuid = urlParams.get('uuid');
         const BACKEND_URL = window.location.hostname === "localhost"
             ? "http://localhost:8080/api/photos/public/upload/"
-            : "https://SENIN-BACKEND-LINKIN.up.railway.app/api/photos/public/upload/";
+            : "https://event-photo.onrender.com/";
 
         // 2. Dosya seçilince otomatik yükleme başlasın
         document.getElementById('fileInput').addEventListener('change', async (e) => {
